@@ -114,21 +114,20 @@ pub fn run_hooks(
     mut cmds: Commands,
 ) {
     for (entity, instance, hooked) in unloaded_instances.iter() {
-        if let Some(entities) = scene_manager.iter_instance_entities(**instance) {
-            let mut entities = entities.filter_map(|e| world.get_entity(e))
-                                       .collect::<Vec::<_>>();
-            entities.sort_by_key(|e| e.get::<Name>().map(|t|t.as_str()));
+        let entities = scene_manager.iter_instance_entities(**instance);
+        let mut entities = entities.filter_map(|e| world.get_entity(e))
+                                   .collect::<Vec::<_>>();
+        entities.sort_by_key(|e| e.get::<Name>().map(|t|t.as_str()));
 
-            for entity_ref in entities.iter() {
-                let mut cmd = cmds.entity(entity_ref.id());
-                let mesh = entity_ref.get::<Handle<Mesh>>()
-                                     .map(|m| meshes.get(m))
-                                     .flatten();
+        for entity_ref in entities.iter() {
+            let mut cmd = cmds.entity(entity_ref.id());
+            let mesh = entity_ref.get::<Handle<Mesh>>()
+                                 .map(|m| meshes.get(m))
+                                 .flatten();
 
-                (hooked.hook)(&entity_ref, &mut cmd, mesh);
-            }
-            cmds.entity(entity).insert(SceneHooked);
+            (hooked.hook)(&entity_ref, &mut cmd, mesh);
         }
+        cmds.entity(entity).insert(SceneHooked);
     }
 }
 

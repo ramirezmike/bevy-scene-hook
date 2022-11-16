@@ -11,9 +11,9 @@ version = "4.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { version = "0.8.1", default-features = false, features = [ "bevy_scene", "bevy_asset", "bevy_render" ] }
+bevy = { version = "0.9", default-features = false, features = [ "bevy_scene", "bevy_asset", "bevy_render" ] }
 
 [dev-dependencies]
-bevy = { version = "0.8.1", default-features = false, features = [ "bevy_scene", "bevy_asset" ] }
+bevy = { version = "0.9", default-features = false, features = [ "bevy_scene", "bevy_asset" ] }
 
 
