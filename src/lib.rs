@@ -4,7 +4,7 @@
 mod hook;
 
 use bevy::{
-    ecs::{schedule::ShouldRun, system::SystemParam},
+    ecs::system::SystemParam,
     prelude::*,
 };
 
@@ -36,15 +36,12 @@ impl<'w, 's, T: Component> HookedSceneState<'w, 's, T> {
 }
 
 /// Convenience run criteria to query if a scene marked with `M` has been loaded.
-pub fn is_scene_hooked<M: Component>(state: HookedSceneState<M>) -> ShouldRun {
-    match state.is_loaded() {
-        true => ShouldRun::Yes,
-        false => ShouldRun::No,
-    }
+pub fn is_scene_hooked<M: Component>(state: HookedSceneState<M>) -> bool {
+    state.is_loaded()
 }
 
 /// Systems defined in the [`bevy_scene_hook`](crate) crate (this crate).
-#[derive(Debug, Clone, PartialEq, Eq, Hash, SystemLabel)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, SystemSet)]
 pub enum Systems {
     /// System running the hooks.
     SceneHookRunner,
@@ -54,6 +51,6 @@ pub enum Systems {
 pub struct HookPlugin;
 impl Plugin for HookPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(run_hooks.label(Systems::SceneHookRunner));
+        app.add_system(run_hooks.in_set(Systems::SceneHookRunner));
     }
 }
